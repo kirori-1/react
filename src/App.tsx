@@ -3,40 +3,36 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
 import RadioBox from "./components/RadioBox";
-import FontColorPage from "./pages/FontColorPage";
 
 function App() {
   const [count, setCount] = useState(0);
-  const [showFontColorPage, setShowFontColorPage] = useState(false);
-
-  if (showFontColorPage) {
-    return <FontColorPage />;
-  }
 
   return (
     <>
-      <button onClick={() => setShowFontColorPage(true)}>Go to FontColorPage</button>
       <div>
-        <a href="https://vite.dev" target="_blank" rel="noopener noreferrer">
+        <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
-        <a href="https://react.dev" target="_blank" rel="noopener noreferrer">
+        <a href="https://react.dev" target="_blank">
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
       <h1>Vite + React</h1>
-      <div className="card" style={{ display: "flex" }}>
+      <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>
+        <p>
+          Edit <code>src/App.tsx</code> and save to test HMR
+        </p>
       </div>
-      <div style={{ display: "flex", justifyContent: "center" }}>
+      <div>
         <RadioBox
-       
           initialColor="lightgray"
           initialFontColor="black"
           initialSize="100px"
           initialFontSize="16px"
+          isActive={true}
           isVisible={true}
           initialValue="default"
         />
