@@ -15,7 +15,9 @@ function App() {
 
   return (
     <>
-      <button onClick={() => setShowFontColorPage(true)}>Go to FontColorPage</button>
+      <button onClick={() => setShowFontColorPage(true)}>
+        Go to FontColorPage
+      </button>
       <div>
         <a href="https://vite.dev" target="_blank" rel="noopener noreferrer">
           <img src={viteLogo} className="logo" alt="Vite logo" />
@@ -32,13 +34,13 @@ function App() {
       </div>
       <div style={{ display: "flex", justifyContent: "center" }}>
         <RadioBox
-       
           initialColor="lightgray"
           initialFontColor="black"
           initialSize="100px"
           initialFontSize="16px"
           isVisible={true}
           initialValue="default"
+          initactivable={false}
         />
       </div>
       <p className="read-the-docs">
