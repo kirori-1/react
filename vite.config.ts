@@ -24,7 +24,7 @@ export default defineConfig({
                 try {
                   const parsed = JSON.parse(body);
                   res.end(JSON.stringify({ status: "ok", received: parsed }));
-                } catch (err) {
+                } catch (error) {
                   res.statusCode = 400;
                   res.end(JSON.stringify({ error: "Invalid JSON" }));
                 }
