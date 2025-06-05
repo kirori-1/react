@@ -1,4 +1,12 @@
 import React from 'react';
+import RadioGroup from '../components/form/RadioGroup';
+import RadioBox from '../components/form/RadioBox';
+import CheckBoxGroup from '../components/form/CheckBoxGroup';
+import SelectBox from '../components/form/SelectBox';
+import SetcolorButton from '../components/button/SetcolorButton';
+import SetselectButton from '../components/button/SetselectButton';
+import SetvisibleButton from '../components/button/SetvisibleButton';
+import FetchData from '../components/fetch/FetchData';
 
 /**
  * 二级菜单组件，用于集中展示或导航到现有组件页面。
@@ -9,6 +17,28 @@ function SecondLevelMenu() {
     <div style={{ border: '1px solid #ccc', padding: '10px' }}>
       <h2>二级菜单</h2>
       <p>这里可以放置现在做好的组件页面或导航链接。</p>
+<div style={{ display: 'flex', flexDirection: 'column', gap: '12px', padding: '8px' }}>
+  <RadioGroup
+    initialColor="gray"
+    initialFontColor="black"
+    initialSize="100px"
+    initialFontSize="16px"
+    initialValue="demo1"
+    options={[
+      { label: "OptionA", value: "A" },
+      { label: "OptionB", value: "B" },
+    ]}
+  />
+  <RadioBox />
+  <CheckBoxGroup />
+  <SelectBox />
+  <div style={{ display: 'flex', gap: '8px' }}>
+    <SetcolorButton />
+    <SetselectButton />
+    <SetvisibleButton />
+  </div>
+  <FetchData />
+</div>
       {/* 以下示例展示直接放置组件，可根据需求调整排版 */}
       {/* 
       <RadioGroup />
