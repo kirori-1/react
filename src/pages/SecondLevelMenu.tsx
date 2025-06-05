@@ -1,4 +1,4 @@
-import RadioGroup from "../components/form/RadioGroup";
+import FormComponents from "../components/form/FormComponents";
 import RadioBox from "../components/form/RadioSolo";
 import CheckBoxGroup from "../components/form/CheckBoxGroup";
 import SelectBox from "../components/form/SelectBox";
@@ -14,13 +14,13 @@ import { Link } from "react-router-dom";
  */
 function SecondLevelMenu() {
   return (
-    <div style={{ border: "1px solid #ccc", padding: "10px" }}>
+    <div style={{ display: "flex", border: "1px solid #ccc", padding: "10px" }}>
       <h2>二级菜单</h2>
       <p>这里可以放置现在做好的组件页面或导航链接。</p>
       <div
         style={{
           display: "flex",
-          flexDirection: "column",
+
           gap: "12px",
           padding: "8px",
         }}
@@ -31,10 +31,16 @@ function SecondLevelMenu() {
             <Link to="/radiogroup">RadioGroup 页面</Link>
           </li>
           <li>
+            <Link to="/formpage">FormPage 页面</Link>
+          </li>
+          <li>
             <Link to="/radiobox">RadioBox 页面</Link>
           </li>
           <li>
             <Link to="/fetchdata">FetchData 页面</Link>
+          </li>
+          <li>
+            <Link to="/listpage">ListAndable 页面</Link>
           </li>
         </ul>
         <p>组件示范</p>
@@ -42,7 +48,8 @@ function SecondLevelMenu() {
           name="radio-1"
           label="My RadioBox"
           value=""
-          checkable={true}
+          checked={true}
+          checkable={false}
           onChange={() => console.log("RadioBox changed")}
           isVisible={true}
         />
@@ -58,13 +65,18 @@ function SecondLevelMenu() {
             { label: "Select2", value: "select2" },
           ]}
         />
-        <div style={{ display: "flex", gap: "8px" }}>
+
+        <div style={{ display: "flex", gap: "20px" }}>
           <SetcolorButton initialColor="pink" />
           <SetselectButton checkable={true} initactivable={true} />
           <SetvisibleButton isVisible={true} />
         </div>
+        <div style={{ display: "flex" }}>
+          <FormComponents></FormComponents>
+        </div>
         <FetchData label="Fetch" value="fetch" />
       </div>
+
       {/* 以下示例展示直接放置组件，可根据需求调整排版 */}
       {/* 
       <RadioGroup />

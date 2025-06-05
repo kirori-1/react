@@ -17,7 +17,7 @@ const SetselectButton :React.FC<RadioOption>= ({
       <button onClick={() => setIsRadioActive((prev) => !prev)}>
         {isRadioActive ? "disable RadioBox" : "enable RadioBox"}
       </button>
-      <button onClick={() => setChecked(!checked)}>Set Select</button>;
+      <button onClick={() => setChecked(!checked)}>Set Select</button>
     </div>
   );
 };

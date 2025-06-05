@@ -1,12 +1,13 @@
-// src/utils/axiosInstance.ts
+import { useEffect } from "react";
 import axios from "axios";
 
-const axiosInstance = axios.create({
-  baseURL: "http://api.xxx.com", // ✅ 替换为你的二级域名
-  timeout: 5000,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+export default function Demo() {
+  useEffect(() => {
+    axios
+      .get("https://jsonplaceholder.typicode.com/users")
+      .then((res) => console.log(res.data))
+      .catch((err) => console.error(err));
+  }, []);
 
-export default axiosInstance;
+  return ;
+}
