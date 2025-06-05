@@ -1,8 +1,8 @@
 import { useState } from "react";
 import "./App.css";
-// // import RadioBox from "./components/form/RadioBox";
+// // import RadioBox from "./components/RadioBox";
 // import FontColorPage from "./pages/FontColorPage";
-import RadioGroup from "./components/form/RadioGroup";
+import RadioGroup from "./components/RadioGroup";
 
 function App() {
   // const [count, setCount] = useState(0);
@@ -34,9 +34,7 @@ function App() {
           count is {count}
         </button>
       </div> */}
-      <div>
-        <p>選択されたのは: {selectedValue}</p>
-      </div>
+
       <div style={{ display: "flex", justifyContent: "center" }}>
         <RadioGroup
           initialFontColor="black"
@@ -48,9 +46,12 @@ function App() {
           onChange={handleRadioChange}
           isVisible={true}
           initialValue="default"
+          initactivable={true}
         />
       </div>
-
+      <div>
+        <p>選択されたのは: {selectedValue}</p>
+      </div>
       {/* <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p> */}
