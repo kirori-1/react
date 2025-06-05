@@ -1,28 +1,33 @@
 import React, { useState } from "react";
 
-interface RadioBoxProps {
+interface RadioProps {
+  name: string;
   label: string;
+
+  value: string;
   checked: boolean;
-  onChange: () => void;
   checkable: boolean;
+
+  onChange: (newVal: boolean) => void;
   isVisible: boolean;
-  initialValue: string;
-  initactivable: boolean;
 }
 
-const RadioBox: React.FC<RadioBoxProps> = ({
-  checked,
+const RadioBox: React.FC<RadioProps> = ({
+  name,
+  value,
   onChange,
+  checked,
   checkable,
-  isVisible,
-  initialValue,
-  initactivable,
+  isVisible = true,
 }) => {
-  const [isRadioActive, setIsRadioActive] = useState(initactivable);
   const [visible, setVisible] = useState(isVisible);
-  const [value, setValue] = useState(initialValue);
+  const [currentValue, setValue] = useState(value);
 
+  const [isDisabled, setCheckable] = useState(checkable);
   const [fetchedValue, setFetchedValue] = useState<string>("Fetch Data");
+
+
+
 
   const fetchData = async () => {
     try {
@@ -53,16 +58,17 @@ const RadioBox: React.FC<RadioBoxProps> = ({
       <label>
         <input
           type="radio"
-          name="radio-box"
+          name={name}
+          value={currentValue}
           checked={checked}
-          onChange={onChange}
-          disabled={!checkable}
+          onChange={() => onChange(!checked)}
+          disabled={isDisabled}
         />
-        check
+        {fetchedValue}
       </label>
-      s<button onClick={() => setVisible(!visible)}>Toggle Visibility</button>
-      <button onClick={() => setIsRadioActive((prev) => !prev)}>
-        {isRadioActive ? "禁用 RadioBox" : "启用 RadioBox"}
+      <button onClick={() => setVisible(!visible)}>Toggle Visibility</button>
+      <button onClick={() => setCheckable((checkable) => !checkable)}>
+        {!isDisabled ? "禁用 RadioBox" : "启用 RadioBox"}
       </button>
       <button onClick={fetchData}>{fetchedValue}</button>
       <button onClick={submitData}>Submit Data</button>
