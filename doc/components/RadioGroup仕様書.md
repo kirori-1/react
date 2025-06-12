@@ -7,50 +7,60 @@
   - [使用例](#使用例)
   - [描画例](#描画例)
   - [処理概要](#処理概要)
-  - [部品ディレクトリ](#部品ディレクトリ)
+  - [部品ディレクトリ](#部品ディレクトリ)
 - [属性](#属性)
   - [静的属性](#静的属性)
     - [options](#options)
-    - [defaultSelected](#defaultselected)
+    - [controlledValue](#controlledvalue)
+    - [defaultValue](#defaultvalue)
     - [initialColor](#initialcolor)
     - [initialFontColor](#initialfontcolor)
     - [initialSize](#initialsize)
     - [initialFontSize](#initialfontsize)
     - [isVisible](#isvisible)
-    - [initialValue](#initialvalue)
-    - [initactivable](#initactivable)
+    - [isAllDisabled](#isalldisabled)
     - [onChange](#onchange)
   - [機能補足](#機能補足)
-    - [ラジオボタンの有効・無効切替](#ラジオボタンの有効無効切替)
-    - [データの取得と送信](#データの取得と送信)
+    - [単一/全体の有効無効切り替え](#単一全体の有効無効切り替え)
+    - [データ送信処理](#データ送信処理)
 
 ## 改版履歴
 
-| 版数 | 改版内容     | 改版者   | 改版日時   |
-| ---- | ------------ | -------- | ---------- |
-| 1.0  | 初版作成     | Wang Jiaqi | 2025/06/03 |
+| 版数 | 改版内容                                                                                            | 改版者    | 改版日時       |
+| ---- | --------------------------------------------------------------------------------------------------- | --------- | -------------- |
+| 1.0  | 初版作成                                                                                            | Wang Jiaqi | 2025/06/03     |
+| 2.0  | コントロール対象の変更（`defaultSelected`→`defaultValue`）、全体無効用の`isAllDisabled`追加、単一無効用`disabled`追加、複数のAPI仕様反映 | Wang Jiaqi | 2025/06/11     |
 
 ## 概要
 
+Radioboxの集合を形成するUIコンポーネントで、以下の特徴があります。
+
+- 単一選択のラジオボタンをまとめ、外部からの制御(`controlledValue`)および非制御(`defaultValue`)で動作が可能
+- `isAllDisabled` による全体の無効化機能、および `RadioOption.disabled` による個別の無効化機能
+- コンポーネントの表示/非表示、フォントサイズやカラー設定を行うプロパティを提供
+- ボタンクリックでデータをPOST送信する例( `submitData` ) などフォーム機能の簡易実装を含む
+
 ### 使用例
 
-\`\`\`tsx
+```tsx
 <RadioGroup
-  initialColor="#ffffff"
-  initialFontColor="#333333"
+  name="example"
+  controlledValue="option2"     // 受控模式
+  defaultValue="option1"        // 非受控での初期選択
+  initialColor="#F5F5F5"
+  initialFontColor="#000000"
   initialSize="200px"
   initialFontSize="14px"
   isVisible={true}
-  initialValue="default"
-  initactivable={true}
+  isAllDisabled={false}
   options={[
-    { label: "Option A", value: "A", checkable: true },
-    { label: "Option B", value: "B", checkable: true },
+    { label: "Option1", value: "option1" },
+    { label: "Option2", value: "option2", disabled: true }, // 個別無効
+    { label: "Option3", value: "option3" }
   ]}
-  defaultSelected="A"
-  onChange={(val) => console.log("選択:", val)}
+  onChange={(val) => console.log("選択された値:", val)}
 />
-\`\`\`
+```
 
 ### 描画例
 
@@ -58,15 +68,20 @@
 
 ### 処理概要
 
-本コンポーネントは、ラジオボタンのグループを形成し、UI制御機能（背景色変更、可視制御、ボタン活性状態の切り替え、データ通信）を内包するユーティリティ型のフォーム部品です。
+- `controlledValue` が与えられた場合は受控コンポーネントとなり、外部で選択値を管理します
+- `defaultValue` は非受控でのみ使われ、最初のマウント時に一度だけ選択状態を初期化します
+- ラジオボタンのクリックで `handleChange` を呼び、選択値を更新し、`onChange` コールバックで親コンポーネントへ通知
+- `isAllDisabled` が `true` の場合、すべてのラジオボタンが無効状態になります
+- 各 `RadioOption` は `disabled?: boolean` を指定でき、任意の個別要素を無効化します
+- `submitData` 関数により選択値を `/api/data` へ POST 送信する例が含まれます（必要に応じてカスタマイズ可）
 
 ### 部品ディレクトリ
 
-|       性質       |                     ファイル                     |
-| :--------------: | :----------------------------------------------: |
-|       本体       | \`./src/components/RadioGroup.tsx\`                |
-| 型定義ファイル   | \`./src/components/RadioGroup.tsx\`（内に定義）     |
-|  データ管理      | \`useState\` + \`fetch\` による内部状態管理           |
+|      性質      |                          ファイル                          |
+| :------------: | :-------------------------------------------------------: |
+|      本体      |    `./src/components/form/RadioGroup.tsx`                 |
+|  型定義ファイル | 同上 (コンポーネントファイル内で props と option を定義)      |
+|  データ管理    | `useState` + `fetch` による内部状態管理                      |
 
 ## 属性
 
@@ -75,73 +90,78 @@
 #### `options`
 
 - 型：
-  \`\`\`ts
-  options: { label: string; value: string; checkable: boolean }[]
-  \`\`\`
-- 説明：表示するラジオ項目の配列
+  ```ts
+  interface RadioOption {
+    label: string;
+    value: string;
+    disabled?: boolean;
+  }
+  options: RadioOption[];
+  ```
+- 説明：表示するラジオボタンの配列。各項目のラベルと値、個別無効化用のフラグ(`disabled`)を定義
 
-#### `defaultSelected`
+#### `controlledValue`
 
-- 型：\`string\`
-- デフォルト：\`undefined\`
-- 説明：初期選択される値
+- 型： `string | undefined`
+- 説明：外部管理モード(受控)の選択値。これが指定されると、内部では状態を持たずに、常にこの値が選択状態となる
+
+#### `defaultValue`
+
+- 型： `string | undefined`
+- 説明：非受控モードでの初期選択値。マウント時にのみ設定される
 
 #### `initialColor`
 
-- 型：\`string\`
-- デフォルト：\`"#ffffff"\`
-- 説明：背景色の初期値（RGB/HEX）
+- 型： `string`
+- デフォルト： `未使用または任意`
+- 説明：背景色用のプロパティ（現在の実装では使用されていませんが、将来的に拡張可能）
 
 #### `initialFontColor`
 
-- 型：\`string\`
-- デフォルト：\`"#000000"\`
-- 説明：フォント色
+- 型： `string`
+- デフォルト： `"black"`
+- 説明：ラジオボタン全体のテキストカラー
 
 #### `initialSize`
 
-- 型：\`string\`
-- 例：\`"200px"\`
-- 説明：コンポーネントの最小幅と高さに使用
+- 型： `string`
+- 例： `"100px"`
+- 説明：ラジオグループ全体の `minWidth` と `minHeight` に適用し、コンポーネントの大きさを大まかに指定
 
 #### `initialFontSize`
 
-- 型：\`string\`
-- 例：\`"14px"\`
-- 説明：フォントサイズ
+- 型： `string`
+- 例： `"14px"`
+- 説明：ラベル文字のフォントサイズ
 
 #### `isVisible`
 
-- 型：\`boolean\`
-- デフォルト：\`true\`
-- 説明：表示制御（非表示時は \`"hidden"\` に）
+- 型： `boolean`
+- デフォルト： `true`
+- 説明：`false` の場合、コンポーネント全体が非表示（nullを返す）
 
-#### `initialValue`
+#### `isAllDisabled`
 
-- 型：\`string\`
-- 説明：データ送信時の初期値
-
-#### `initactivable`
-
-- 型：\`boolean\`
-- デフォルト：\`true\`
-- 説明：ラジオボタンを初期状態で活性にするか
+- 型： `boolean`
+- デフォルト： `false`
+- 説明：`true` の場合、すべてのラジオボタンが無効状態となり操作できなくなる
 
 #### `onChange`
 
 - 型：
-  \`\`\`ts
-  (selectedValue: string) => void
-  \`\`\`
-- 説明：選択値が変わった際のコールバック関数
+  ```ts
+  onChange?: (selectedValue: string) => void;
+  ```
+- 説明：ラジオボタンの選択値が変化したときに呼び出されるコールバック
 
-### 機能補足
+## 機能補足
 
-#### ラジオボタンの有効・無効切替
+### 単一/全体の有効無効切り替え
 
-- ボタンクリックで \`setIsRadioActive\` をトグルし、ラジオ選択の活性・非活性を切り替え可能
+- `RadioOption` の `disabled` プロパティによって個別にラジオ項目を無効化できる
+- `isAllDisabled` プロパティにより、まとめてラジオボタンを無効化可能
 
-#### データの取得と送信
+### データ送信処理
 
-- \`fetchData\`：\`/api/data\` から取得し、値を反映
-- \`submitData\`：現在の \`value\` を POST 送信
+- `submitData` 関数が例示されており、現在の選択値を `/api/data` にPOST送信する  
+  （任意のプロジェクト要件に応じて `fetch` 先や内容を変更してください）

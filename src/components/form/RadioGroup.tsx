@@ -3,6 +3,7 @@ import React, { useState } from "react";
 interface RadioOption {
   label: string;
   value: string; // 选项自身的值
+  disabled?: boolean;
 }
 
 interface RadioGroupProps {
@@ -21,6 +22,7 @@ interface RadioGroupProps {
   options: RadioOption[];
   onChange?: (selectedValue: string) => void;
   isVisible?: boolean;
+    isAllDisabled?: boolean; // 一键禁用整个组件
 }
 
 const RadioGroup: React.FC<RadioGroupProps> = ({
@@ -33,6 +35,7 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
   options,
   isVisible = true,
   defaultValue,
+  isAllDisabled,
 }) => {
   const [selectedValue, setSelectedValue] = useState<string | undefined>(
     defaultValue
@@ -82,13 +85,14 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
     >
       {options.map((o) => (
         <label key={o.value} style={{ cursor: "pointer" }}>
-          <input
-            type="radio"
-            name={name}
-            value={o.value}
-            checked={selected === o.value}
-            onChange={() => handleChange(o.value)}
-          />
+        <input
+          type="radio"
+          name={name}
+          value={o.value}
+          checked={selected === o.value}
+          onChange={() => handleChange(o.value)}
+          disabled={isAllDisabled || o.disabled}
+        />
           {o.label}
         </label>
       ))}

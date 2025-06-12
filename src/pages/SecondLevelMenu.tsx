@@ -42,13 +42,16 @@ function SecondLevelMenu() {
           <li>
             <Link to="/listpage">ListAndable 页面</Link>
           </li>
+          <li>
+            <Link to="/documentpage">Document 页面</Link>
+          </li>
         </ul>
         <p>组件示范</p>
         <RadioBox
           name="radio-1"
           label="My RadioBox"
           value=""
-          checked={true}
+          checked={false}
           checkable={false}
           onChange={() => console.log("RadioBox changed")}
           isVisible={true}
